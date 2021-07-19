@@ -4,7 +4,7 @@ export const shellCommand = (cmdString) => {
   return () => execa.command(cmdString, { stdio: 'inherit' })
 }
 
-export default (userOptions = {}) => {
+export const runCommands = (userOptions = {}) => {
   const options = {
     once: true,
     runOn: 'writeBundle',
@@ -33,3 +33,5 @@ export default (userOptions = {}) => {
     }
   }
 }
+
+export default runCommands

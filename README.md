@@ -7,7 +7,7 @@ Features:
 * Runs one or more commands in sequence, waiting for each to finish
 * Run commands when `generateBundle` or `writeBundle` is called as specified by options
 * Each command is passed the parameters `outputOptions` and `bundle` that are passed to the plugin
-* Run commands only once, or multiple times as specified by the options
+* Run commands only once, or each time `generateBundle` or `writeBundle` is called
 * Run async or synchronous functions
 * Run shell commands with parameters in a single string (i.e. 'npm test'), courtesy [execa](https://github.com/sindresorhus/execa) and [cross-spawn](https://github.com/moxystudio/node-cross-spawn).
 
@@ -33,7 +33,15 @@ If you want the `shellCommand`, import like this:
 import runCommands, { shellCommand } from '@toolbuilder/rollup-plugin-commands'
 ```
 
-The file `rollup.test.config.js` in this package provides a real-world example that runs the unit tests on this package's pack file (`npm pack`).
+Alternately, import like this if you don't like the syntax above:
+
+```javascript
+import { runCommands, shellCommand } from '@toolbuilder/rollup-plugin-commands'
+```
+
+## Example
+
+The Rollup config [rollup.test.config.js]('./rollup.test.config.js') tests the pack file for this package. It uses `@toolbuilder/rollup-plugin-commands` to install dependencies and run the tests in a temporary directory.
 
 ## shellCommand
 
@@ -56,11 +64,11 @@ export default [{
 }]
 ```
 
-## Options
+### Options
 
 The plugin does nothing without options.
 
-### commands
+#### commands
 
 * Type: `[Function|AsyncFunction]`
 * Default: `[]`
@@ -79,7 +87,7 @@ const options = {
 
 ```
 
-### runOn
+#### runOn
 
 * Type: `String`
 * Default: `writeBundle`
@@ -92,7 +100,7 @@ const options = {
 }
 ```
 
-### once
+#### once
 
 * Type: `Boolean`
 * Default: `true`

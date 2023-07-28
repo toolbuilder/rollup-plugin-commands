@@ -1,3 +1,4 @@
 node_modules/
+cjs/plugin.js
 *.tgz
 .vscode

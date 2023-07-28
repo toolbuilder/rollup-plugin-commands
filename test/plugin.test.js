@@ -1,5 +1,5 @@
 import { test } from 'zora'
-import runCommands, { shellCommand } from '../src/plugin'
+import runCommands, { shellCommand } from '@toolbuilder/rollup-plugin-commands'
 import fs from 'fs-extra'
 
 const waitToCall = (ms, fn) => {

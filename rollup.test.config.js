@@ -1,9 +1,13 @@
 import createTestPackageJson from 'rollup-plugin-create-test-package-json'
-import multiInput from 'rollup-plugin-multi-input'
+import multiInputPkg from 'rollup-plugin-multi-input'
 import createPackFile from '@toolbuilder/rollup-plugin-create-pack-file'
 import runCommands, { shellCommand } from './src/plugin.js'
 import { tmpdir } from 'os'
 import { join } from 'path'
+
+// multiInput is CJS module transpiled from TypeScript. Default is not coming in properly.
+const isFunction = object => object && typeof (object) === 'function'
+const multiInput = isFunction(multiInputPkg) ? multiInputPkg : multiInputPkg.default
 
 /*
   This Rollup configuration tests this 'rollup-plugin-commands' package three ways:
@@ -66,12 +70,12 @@ export default testEnvironments.map(({ testPackageJson, testPackageDir }) => {
   return {
     // process all unit tests, and specify output in 'test' directory of testPackageDir
     input: ['test/**/*test.js'],
-    preserveModules: true, // Generate one unit test for each input unit test
     output: {
       // it's ok that the unit tests are in ES format for both CJS and ES packages
       // because we use esm to enable ES execution in the CJS package.
       format: 'es',
-      dir: testPackageDir
+      dir: testPackageDir,
+      preserveModules: true // Generate one unit test for each input unit test
     },
     plugins: [
       multiInput(), // Handles the input glob above

@@ -1,6 +1,6 @@
 {
   "name": "@toolbuilder/rollup-plugin-commands",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Configurable Rollup plugin to run async functions in sequence. Includes shell function for convenience.",
   "keywords": [
     "rollup",

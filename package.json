@@ -68,7 +68,7 @@
     "zora": "^5.2.0"
   },
   "peerDependencies": {
-    "rollup": "^2"
+    "rollup": "^2 || ^3"
   },
   "npmpackagejsonlint": {
     "extends": "@toolbuilder/package-json-lint-config"

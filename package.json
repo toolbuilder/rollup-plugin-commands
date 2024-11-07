@@ -37,7 +37,7 @@
     "check": "run-s build check:*",
     "check:packagejson": "npmPkgJsonLint .",
     "check:packfile": "rollup -c rollup.test.config.js",
-    "check:src": "eslint src test",
+    "check:src": "standard src test",
     "check:test": "run-s test",
     "check:uncommitted": "uncommitted",
     "prerelease": "run-s check",
@@ -45,30 +45,26 @@
     "test": "pta --reporter tap \"test/**/*test.js\"",
     "unittest": "npm --version > testfile.txt"
   },
-  "eslintConfig": {
-    "extends": "@toolbuilder/eslint-config"
-  },
   "dependencies": {
-    "execa": "^5.1.1"
+    "execa": "5.1.1"
   },
   "devDependencies": {
-    "@toolbuilder/eslint-config": "^0.1.5",
-    "@toolbuilder/package-json-lint-config": "^0.1.0",
-    "@toolbuilder/rollup-plugin-create-pack-file": "^0.1.6",
-    "eslint": "^8.46.0",
-    "fs-extra": "^11.1.1",
-    "npm-package-json-lint": "^7.0.0",
-    "npm-run-all": "^4.1.5",
-    "pta": "^1.2.0",
-    "rollup": "^3.27.2",
-    "rollup-plugin-create-test-package-json": "^1.1.1",
-    "rollup-plugin-multi-input": "^1.4.1",
+    "@toolbuilder/package-json-lint-config": "^0.1.1",
+    "@toolbuilder/rollup-plugin-create-pack-file": "^0.1.7",
+    "fs-extra": "^11.2.0",
+    "glob": "^11.0.0",
+    "npm-package-json-lint": "^8.0.0",
+    "npm-run-all2": "^7.0.1",
+    "pta": "^1.3.0",
+    "rollup": "^4.24.4",
+    "rollup-plugin-create-test-package-json": "^1.1.2",
+    "standard": "^17.1.2",
     "standard-version": "^9.5.0",
     "uncommitted": "^1.0.0",
-    "zora": "^5.2.0"
+    "zora": "^6.0.0"
   },
   "peerDependencies": {
-    "rollup": "^2 || ^3"
+    "rollup": "^3 || ^4"
   },
   "npmpackagejsonlint": {
     "extends": "@toolbuilder/package-json-lint-config"

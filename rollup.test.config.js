@@ -1,13 +1,22 @@
 import createTestPackageJson from 'rollup-plugin-create-test-package-json'
-import multiInputPkg from 'rollup-plugin-multi-input'
 import createPackFile from '@toolbuilder/rollup-plugin-create-pack-file'
 import runCommands, { shellCommand } from './src/plugin.js'
 import { tmpdir } from 'os'
 import { join } from 'path'
+import { globSync } from 'glob'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-// multiInput is CJS module transpiled from TypeScript. Default is not coming in properly.
-const isFunction = object => object && typeof (object) === 'function'
-const multiInput = isFunction(multiInputPkg) ? multiInputPkg : multiInputPkg.default
+// This is recommended way of preserving directory structure and processing all files
+// rather than using 'preserveModules: true', which involves tree-shaking and virtual files
+const mapInputs = (glob) => Object.fromEntries(
+  globSync(glob).map(file => [
+    // Provide <dir structure>/<file basename> relative to package root, no file extension
+    path.relative('.', file.slice(0, file.length - path.extname(file).length)),
+    // Provide absolute filepath of input file
+    fileURLToPath(new URL(file, import.meta.url))
+  ])
+)
 
 /*
   This Rollup configuration tests this 'rollup-plugin-commands' package three ways:
@@ -33,14 +42,11 @@ const testEnvironments = [
       scripts: {
         // the unittest script is run by the unit test to check shellCommand
         unittest: 'npm --version > testfile.txt',
-        test: 'tape -r esm test/**/*test.js | tap-nirvana'
+        test: 'pta --reporter tap "test/**/*test.js"'
       },
       devDependencies: {
         // These are the dependencies for the test runner
-        esm: '^3.2.25',
-        rollup: '^2', // to satisfy peerDependencies
-        tape: '^5.0.1',
-        'tap-nirvana': '^1.1.0'
+        pta: '^1.3.0'
       }
     },
     testPackageDir: join(testPackageBaseDir, 'cjs')
@@ -58,7 +64,7 @@ const testEnvironments = [
       // dependencies are populated automatically
       devDependencies: {
       // These are the dependencies for the test runner
-        pta: '^1.2.0'
+        pta: '^1.3.0'
       }
     },
     testPackageDir: join(testPackageBaseDir, 'es')
@@ -69,16 +75,16 @@ const testEnvironments = [
 export default testEnvironments.map(({ testPackageJson, testPackageDir }) => {
   return {
     // process all unit tests, and specify output in 'test' directory of testPackageDir
-    input: ['test/**/*test.js'],
+    input: mapInputs(['test/**/*test.js']),
+    external: (id) => !(id.startsWith('.') || id.startsWith('/')),
     output: {
       // it's ok that the unit tests are in ES format for both CJS and ES packages
       // because we use esm to enable ES execution in the CJS package.
       format: 'es',
       dir: testPackageDir,
-      preserveModules: true // Generate one unit test for each input unit test
+      preserveModules: false
     },
     plugins: [
-      multiInput(), // Handles the input glob above
       createTestPackageJson({ // Creates package.json for testPackageDir
         // Provide information that plugin can't pick up for itself
         testPackageJson
